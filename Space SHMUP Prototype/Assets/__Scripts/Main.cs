@@ -6,11 +6,13 @@ using UnityEngine.SceneManagement;
 public class Main : MonoBehaviour
 {
     static public Main S; // Объект-одиночка Main
+    static Dictionary<WeaponType, WeaponDefinition> WEAP_DICT;
 
     [Header("Set in Inspector")]
     public GameObject[] prefabEnemies; // Массив шаблонов Enemy
     public float enemySpawnPerSecond = 0.5f; // Вражеских кораблей в секунду
     public float enemyDefaultPadding = 1.5f; // Отступ для позиционирования
+    public WeaponDefinition[] weaponDefinitions;
 
     private BoundsCheck bndCheck;
 
