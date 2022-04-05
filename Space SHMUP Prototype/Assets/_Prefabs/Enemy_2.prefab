@@ -106,7 +106,7 @@ GameObject:
   - component: {fileID: 3418793579904408002}
   - component: {fileID: 3418793579904408001}
   - component: {fileID: 3418793579904408000}
-  - component: {fileID: 3418793579904408003}
+  - component: {fileID: 6885452267849613633}
   m_Layer: 9
   m_Name: Wing
   m_TagString: Untagged
@@ -177,8 +177,8 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!135 &3418793579904408003
-SphereCollider:
+--- !u!136 &6885452267849613633
+CapsuleCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -187,8 +187,9 @@ SphereCollider:
   m_Material: {fileID: 0}
   m_IsTrigger: 0
   m_Enabled: 1
-  serializedVersion: 2
   m_Radius: 0.5
+  m_Height: 1
+  m_Direction: 0
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &3418793580685262547
 GameObject:
@@ -254,6 +255,22 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4f7f4b16c5f7eb7438250efb29abc39b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  speed: 10
+  fireRate: 0.3
+  health: 10
+  score: 100
+  showDamageDuration: 0.1
+  powerUpDropChance: 1
+  originalColors: []
+  materials: []
+  showingDamage: 0
+  damageDoneTime: 0
+  notifiedOfDestruction: 0
+  sinEccentricity: 0.6
+  lifeTime: 10
+  p0: {x: 0, y: 0, z: 0}
+  p1: {x: 0, y: 0, z: 0}
+  birthTime: 0
 --- !u!114 &-4876210983738420650
 MonoBehaviour:
   m_ObjectHideFlags: 0

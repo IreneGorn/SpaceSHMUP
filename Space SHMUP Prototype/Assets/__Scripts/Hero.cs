@@ -14,6 +14,7 @@ public class Hero : MonoBehaviour
     public float gameRestartDelay = 2f; // время ожидания перезапуска игры после разрушения корабля
     public GameObject projectilePrefab;
     public float projectileSpeed = 40;
+    public Weapon[] weapons;
 
     [Header("Set Dynamically")]
     [SerializeField]
@@ -22,16 +23,19 @@ public class Hero : MonoBehaviour
     // Эта переменная хранит ссылку на последний столкнувшийся игровой объект
     private GameObject lastTriggerGo = null;
 
-    void Awake()
+    // Объявление нового делегата типа WeaponFireDelegate
+    public delegate void WeaponFireDelegate();
+    // Создать поле типа WeaponFireDelegate с именем fireDelegate.
+    public WeaponFireDelegate fireDelegate;
+
+    void Start()
     {
-        if (S == null)
-        {
-            S = this; // Сохранить ссылку на одиночку
-        }
-        else
-        {
-            Debug.LogError("Hero.Awake() - Attempted to assign second Hero.S!");
-        }
+        S = this; // Установить ссылку на объект-одиночку 
+        //fireDelegate += TempFire;
+
+        // Очистить массив weapons и начать игру с 1 бластером
+        ClearWeapon();
+        weapons[0].SetType(WeaponType.blaster);
     }
 
     void Update()
@@ -50,9 +54,18 @@ public class Hero : MonoBehaviour
         transform.rotation = Quaternion.Euler(yAxis * pitchMult, xAxis * rollMult, 0);
 
         // Позволить кораблю выстрелить
-        if (Input.GetKeyDown(KeyCode.Space))
+        //if (Input.GetKeyDown(KeyCode.Space))
+        //{
+        //    TempFire();
+        //}
+
+        // Произвести выстрел из всех видов оружия вызовом fireDelegate
+        // Сначала проверить нажатие клавиши: Axis("Jump")
+        // Затем убедиться, что значение fireDelegate не равно null,
+        //чтобы избежать ошибки
+        if(Input.GetAxis("Jump") == 1 && fireDelegate != null)
         {
-            TempFire();
+            fireDelegate();
         }
     }
 
@@ -61,7 +74,11 @@ public class Hero : MonoBehaviour
         GameObject projGO = Instantiate<GameObject>(projectilePrefab);
         projGO.transform.position = transform.position;
         Rigidbody rigidB = projGO.GetComponent<Rigidbody>();
-        rigidB.velocity = Vector3.up * projectileSpeed;
+
+        Projectile proj = projGO.GetComponent<Projectile>();
+        proj.type = WeaponType.blaster;
+        float tSpeed = Main.GetWeaponDefinition(proj.type).velocity;
+        rigidB.velocity = Vector3.up * tSpeed;
     }
 
     void OnTriggerEnter(Collider other)
@@ -82,10 +99,44 @@ public class Hero : MonoBehaviour
             shieldLevel--; // Уменьшить уровень защиты на 1
             Destroy(go); // ... и уничтожить врага
         }
+        else if (go.tag == "PowerUp")
+        {
+            // Если защитное поле столкнулось с бонусом
+            AbsorbPower(go);
+        }
         else
         {
             print("Triggered by non-Enemy: " + go.name);
         }
+    }
+
+    public void AbsorbPower(GameObject go)
+    {
+        PowerUp pu = go.GetComponent<PowerUp>();
+        switch (pu.type)
+        {
+            case WeaponType.shield:
+                shieldLevel++;
+                break;
+
+            default:
+                if (pu.type == weapons[0].type) // Если оружие того же типа
+                {
+                    Weapon w = GetEmptyWeaponSlot();
+                    if (w != null)
+                    {
+                        // Установить в pu.type
+                        w.SetType(pu.type);
+                    }
+                }
+                else // Если оружие другого типа
+                {
+                    ClearWeapon();
+                    weapons[0].SetType(pu.type);
+                }
+                break;
+        }
+        pu.AbsorbedBy(this.gameObject);
     }
 
     public float shieldLevel
@@ -103,6 +154,26 @@ public class Hero : MonoBehaviour
                 // Сообщить объекту Main.S о необходимости перезапустить игру
                 Main.S.DelayedRestart(gameRestartDelay);
             }
+        }
+    }
+
+    Weapon GetEmptyWeaponSlot()
+    {
+        for(int i = 1; i < weapons.Length; i++)
+        {
+            if(weapons[i].type == WeaponType.none)
+            {
+                return weapons[i];
+            }
+        }
+        return (null);
+    }
+
+    void ClearWeapon()
+    {
+        foreach(Weapon w in weapons)
+        {
+            w.SetType(WeaponType.none);
         }
     }
 }

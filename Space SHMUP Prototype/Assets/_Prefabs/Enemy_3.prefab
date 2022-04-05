@@ -64,6 +64,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: eb365f4b98dba8148ac988b02542979d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  speed: 10
+  fireRate: 0.3
+  health: 10
+  score: 100
+  showDamageDuration: 0.1
+  powerUpDropChance: 1
+  originalColors: []
+  materials: []
+  showingDamage: 0
+  damageDoneTime: 0
+  notifiedOfDestruction: 0
+  lifeTime: 5
+  points: []
+  birthTime: 0
 --- !u!114 &-6091228843493072155
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -96,7 +110,7 @@ GameObject:
   - component: {fileID: 358011446809490748}
   - component: {fileID: 358011446809490689}
   - component: {fileID: 358011446809490750}
-  - component: {fileID: 358011446809490751}
+  - component: {fileID: 2277666212084983849}
   m_Layer: 9
   m_Name: CockpitL
   m_TagString: Untagged
@@ -167,8 +181,8 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!135 &358011446809490751
-SphereCollider:
+--- !u!136 &2277666212084983849
+CapsuleCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -177,8 +191,9 @@ SphereCollider:
   m_Material: {fileID: 0}
   m_IsTrigger: 0
   m_Enabled: 1
-  serializedVersion: 2
   m_Radius: 0.5
+  m_Height: 1
+  m_Direction: 1
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &358011446944077670
 GameObject:
@@ -191,7 +206,7 @@ GameObject:
   - component: {fileID: 358011446944077673}
   - component: {fileID: 358011446944077674}
   - component: {fileID: 358011446944077675}
-  - component: {fileID: 358011446944077672}
+  - component: {fileID: 1001922701754284120}
   m_Layer: 9
   m_Name: Wing
   m_TagString: Untagged
@@ -262,8 +277,8 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!135 &358011446944077672
-SphereCollider:
+--- !u!136 &1001922701754284120
+CapsuleCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -272,8 +287,9 @@ SphereCollider:
   m_Material: {fileID: 0}
   m_IsTrigger: 0
   m_Enabled: 1
-  serializedVersion: 2
   m_Radius: 0.5
+  m_Height: 1
+  m_Direction: 0
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &358011448385601118
 GameObject:
@@ -286,7 +302,7 @@ GameObject:
   - component: {fileID: 358011448385601057}
   - component: {fileID: 358011448385601058}
   - component: {fileID: 358011448385601059}
-  - component: {fileID: 358011448385601056}
+  - component: {fileID: 6945579696735230491}
   m_Layer: 9
   m_Name: CockpitR
   m_TagString: Untagged
@@ -357,8 +373,8 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!135 &358011448385601056
-SphereCollider:
+--- !u!136 &6945579696735230491
+CapsuleCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -367,6 +383,7 @@ SphereCollider:
   m_Material: {fileID: 0}
   m_IsTrigger: 0
   m_Enabled: 1
-  serializedVersion: 2
   m_Radius: 0.5
+  m_Height: 1
+  m_Direction: 1
   m_Center: {x: 0, y: 0, z: 0}

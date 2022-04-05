@@ -13,8 +13,35 @@ public class Main : MonoBehaviour
     public float enemySpawnPerSecond = 0.5f; // Вражеских кораблей в секунду
     public float enemyDefaultPadding = 1.5f; // Отступ для позиционирования
     public WeaponDefinition[] weaponDefinitions;
+    public GameObject prefabPowerUp;
+    public WeaponType[] powerUpFrequency = new WeaponType[]
+    {
+        WeaponType.blaster, WeaponType.blaster,
+        WeaponType.spread, WeaponType.shield
+    };
 
     private BoundsCheck bndCheck;
+
+    public void ShipDestroyed(Enemy e)
+    {
+        // Сгенерировать бонус с заданной вероятностью
+        if(Random.value <= e.powerUpDropChance)
+        {
+            // Выбрать тип бонуса
+            // Выбрать один из элементов в powerUpFrequency
+            int ndx = Random.Range(0, powerUpFrequency.Length);
+            WeaponType puType = powerUpFrequency[ndx];
+
+            // Создать экземпляр PowerUp
+            GameObject go = Instantiate(prefabPowerUp) as GameObject;
+            PowerUp pu = go.GetComponent<PowerUp>();
+            // Установить соответсвующий тип WeaponType
+            pu.SetType(puType);
+
+            // Поместить в место, где находился разрушенный корабль
+            pu.transform.position = e.transform.position;
+        }
+    }
 
     void Awake()
     {
@@ -23,6 +50,13 @@ public class Main : MonoBehaviour
         bndCheck = GetComponent<BoundsCheck>();
         // Вызывать SpawnEnemy() один раз (в 2 секунды при значения по умолчанию)
         Invoke("SpawnEnemy", 1f / enemySpawnPerSecond);
+
+        // Словарь с ключами типа WeaponType
+        WEAP_DICT = new Dictionary<WeaponType, WeaponDefinition>();
+        foreach(WeaponDefinition def in weaponDefinitions)
+        {
+            WEAP_DICT[def.type] = def;
+        }
     }
 
     public void SpawnEnemy()
@@ -60,5 +94,24 @@ public class Main : MonoBehaviour
     {
         // Перезагрузить _Scene_0, чтобы перезапустить игру
         SceneManager.LoadScene("_Scene_0");
+    }
+
+    /// <summary>
+    /// Статическая функция, возвращающая WeaponDefinition из статического 
+    /// защищенного поля WEAP_DICT класса Main
+    /// </summary>
+    /// <returns>Экземпляр WeaponDefinition или, если нет такого определения
+    /// для указанного WeaponType, возвращает новый экзмепляр WeaponDefinition
+    /// с типом none.</returns>
+    /// <param name="wt">Тип оружия WeaponType, для которого требуется получить 
+    /// WeaponDefinition</param>
+    static public WeaponDefinition GetWeaponDefinition(WeaponType wt)
+    {
+        // Проверить наличие указанного ключа в словаре
+        if (WEAP_DICT.ContainsKey(wt))
+        {
+            return (WEAP_DICT[wt]);
+        }
+        return new WeaponDefinition();
     }
 }
